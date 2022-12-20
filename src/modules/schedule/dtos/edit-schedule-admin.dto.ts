@@ -1,17 +1,17 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsDate, IsDefined, IsNumber, IsPositive } from 'class-validator';
 
-export class CreateScheduleBodyDto {
-  @ApiProperty()
+export class EditScheduleAdminBodyDto {
+  @ApiPropertyOptional()
   @IsDefined()
   @IsDate()
   @Type(() => Date)
-  date: Date;
+  date?: Date;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsDefined()
   @IsNumber()
   @IsPositive()
-  shiftLength: number;
+  shiftLength?: number;
 }

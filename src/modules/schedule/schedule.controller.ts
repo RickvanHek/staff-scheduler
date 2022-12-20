@@ -1,6 +1,13 @@
+import {
+  Controller,
+  Get,
+  Param,
+  Query,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { JwtAuthGuard } from './../auth/guards/jwt-auth.guard';
-import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
-import { CreateScheduleBodyDto } from './dtos/create-schedule.dto';
+import { ListSchedulesQueryParamsDto } from './dtos/list-schedules.dto';
 import { ScheduleService } from './schedule.service';
 
 @UseGuards(JwtAuthGuard)
@@ -8,9 +15,19 @@ import { ScheduleService } from './schedule.service';
 export class ScheduleController {
   constructor(private readonly scheduleService: ScheduleService) {}
 
-  @Post()
-  createSchedule(@Request() req, @Body() body: CreateScheduleBodyDto) {
-    const { date, shiftLength } = body;
-    this.scheduleService.createSchedule(req.user.userId, date, shiftLength);
+  @Get()
+  listSchedules(@Request() req, @Query() query: ListSchedulesQueryParamsDto) {
+    return this.scheduleService.listSchedules({
+      userId: req.user.userId,
+      ...query,
+    });
+  }
+
+  @Get(':id')
+  getSchedule(@Request() req, @Param('id') scheduleId: number) {
+    return this.scheduleService.getSchedule({
+      scheduleId,
+      userId: req.user.userId,
+    });
   }
 }
