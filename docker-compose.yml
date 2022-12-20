@@ -1,0 +1,38 @@
+version: '3.5'
+
+services:
+  admin:
+    image: phpmyadmin/phpmyadmin:latest
+    links:
+      - mysql:${MYSQL_HOST}
+    depends_on:
+      - mysql
+    ports:
+      - '8080:80'
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      PMA_HOST: ${MYSQL_HOST}
+      PMA_PORT: ${MYSQL_PORT}
+
+  mysql:
+    build: ./database
+    image: mysql:latest
+    container_name: 'mysql'
+    volumes:
+      - ./database/data:/var/lib/mysql
+    ports:
+      - '${MYSQL_PORT}:${MYSQL_PORT}'
+    expose:
+      - '${MYSQL_PORT}'
+    environment:
+      MYSQL_TCP_PORT: ${MYSQL_PORT}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DB_NAME}
+  api:
+    build: ./
+    environment:
+      MYSQL_HOST: 'mysql'
+    depends_on:
+      - mysql
+    ports:
+      - '3000:3000'
