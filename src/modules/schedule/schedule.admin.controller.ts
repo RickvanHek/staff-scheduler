@@ -36,8 +36,8 @@ export class ScheduleAdminController {
 
   @Post()
   createSchedule(@Body() body: CreateScheduleAdminBodyDto) {
-    const { userId, date, shiftLength } = body;
-    return this.scheduleService.createSchedule(userId, date, shiftLength);
+    const { userId, date, hours } = body;
+    return this.scheduleService.createSchedule(userId, date, hours);
   }
 
   @Patch(':id')
@@ -45,8 +45,8 @@ export class ScheduleAdminController {
     @Param('id') scheduleId: number,
     @Body() body: EditScheduleAdminBodyDto,
   ) {
-    const { date, shiftLength } = body;
-    return this.scheduleService.editSchedule(scheduleId, date, shiftLength);
+    const { date, hours } = body;
+    return this.scheduleService.editSchedule(scheduleId, date, hours);
   }
 
   @Delete(':id')

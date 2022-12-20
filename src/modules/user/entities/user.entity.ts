@@ -21,6 +21,8 @@ export class User {
   @OneToMany(() => Schedule, (schedule) => schedule.user)
   schedules: Schedule[];
 
+  totalHours: number;
+
   constructor(username: string, password: string) {
     this.username = username;
     this.password = password;

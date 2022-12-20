@@ -15,8 +15,22 @@ export class UserService {
     private usersRepository: Repository<User>,
   ) {}
 
-  findAll(): Promise<User[]> {
-    return this.usersRepository.find();
+  async findAll(): Promise<{ user: User; totalHours: number }[]> {
+    const queryBuilder = this.usersRepository.createQueryBuilder('user');
+    queryBuilder
+      .innerJoin('user.schedules', 'schedules')
+      .addSelect('SUM(schedules.hours)', 'totalHours')
+      .groupBy('user.id')
+      .orderBy('totalHours', 'DESC');
+    const rawUsersWithTotalHours = await queryBuilder.getRawMany();
+    const users = await queryBuilder.getMany();
+    return users.map((user) => ({
+      user: user,
+      totalHours: parseInt(
+        rawUsersWithTotalHours.find((rawUser) => rawUser.user_id === user.id)
+          .totalHours,
+      ),
+    }));
   }
 
   findOneByUsername(username: string): Promise<User> {

@@ -13,5 +13,5 @@ export class EditScheduleAdminBodyDto {
   @IsDefined()
   @IsNumber()
   @IsPositive()
-  shiftLength?: number;
+  hours?: number;
 }

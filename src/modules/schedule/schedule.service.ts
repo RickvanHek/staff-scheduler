@@ -57,7 +57,7 @@ export class ScheduleService {
     return schedule;
   }
 
-  async createSchedule(userId: number, date: Date, shiftLength: number) {
+  async createSchedule(userId: number, date: Date, hours: number) {
     const user = await this.userService.findOneById(userId);
     if (!user) {
       throw new NotFoundException(`User with user id: ${userId} not found`);
@@ -67,11 +67,11 @@ export class ScheduleService {
         `Schedule should be in the future`,
       );
     }
-    const schedule = new Schedule(user, date, shiftLength);
+    const schedule = new Schedule(user, date, hours);
     return this.scheduleRespository.save(schedule);
   }
 
-  async editSchedule(scheduleId: number, date?: Date, shiftLength?: number) {
+  async editSchedule(scheduleId: number, date?: Date, hours?: number) {
     const schedule = await this.scheduleRespository.findOneBy({
       id: scheduleId,
     });
@@ -81,8 +81,8 @@ export class ScheduleService {
     if (date) {
       schedule.date = date;
     }
-    if (shiftLength) {
-      schedule.shiftLength = shiftLength;
+    if (hours) {
+      schedule.hours = hours;
     }
     return this.scheduleRespository.save(schedule);
   }
