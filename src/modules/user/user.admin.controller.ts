@@ -7,6 +7,7 @@ import {
   Patch,
   UseGuards,
 } from '@nestjs/common';
+import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AdminGuard } from './../auth/guards/admin.guard';
 import { EditUserAdminBodyDto } from './dtos/edit-user-admin.dto';
@@ -14,6 +15,8 @@ import { UserService } from './user.service';
 
 @UseGuards(JwtAuthGuard, AdminGuard)
 @Controller('admin/user')
+@ApiTags('admin')
+@ApiSecurity('bearer')
 export class UserAdminController {
   constructor(private readonly userService: UserService) {}
 

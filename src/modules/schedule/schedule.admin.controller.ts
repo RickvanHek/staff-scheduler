@@ -1,3 +1,4 @@
+import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -18,6 +19,8 @@ import { ScheduleService } from './schedule.service';
 
 @UseGuards(JwtAuthGuard, AdminGuard)
 @Controller('admin/schedule')
+@ApiTags('admin')
+@ApiSecurity('bearer')
 export class ScheduleAdminController {
   constructor(private readonly scheduleService: ScheduleService) {}
 

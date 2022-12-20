@@ -6,12 +6,15 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
+import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from './../auth/guards/jwt-auth.guard';
 import { ListSchedulesQueryParamsDto } from './dtos/list-schedules.dto';
 import { ScheduleService } from './schedule.service';
 
 @UseGuards(JwtAuthGuard)
 @Controller('schedule')
+@ApiTags('schedule')
+@ApiSecurity('bearer')
 export class ScheduleController {
   constructor(private readonly scheduleService: ScheduleService) {}
 

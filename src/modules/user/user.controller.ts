@@ -9,8 +9,10 @@ import {
   Body,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 
 @Controller('user')
+@ApiTags('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -22,6 +24,7 @@ export class UserController {
 
   @Get('profile')
   @UseGuards(JwtAuthGuard)
+  @ApiSecurity('bearer')
   getProfile(@Request() req) {
     return this.userService.findOneByUsername(req.user.username);
   }
