@@ -20,8 +20,8 @@ export class UserController {
     return this.userService.register(username, password);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('profile')
+  @UseGuards(JwtAuthGuard)
   getProfile(@Request() req) {
     return this.userService.findOneByUsername(req.user.username);
   }

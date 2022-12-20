@@ -14,10 +14,8 @@ export class UserService {
     return this.usersRepository.find();
   }
 
-  async findOneByUsername(username: string): Promise<Partial<User>> {
-    const user = await this.usersRepository.findOneBy({ username });
-    const { password, ...result } = user;
-    return result;
+  findOneByUsername(username: string): Promise<User> {
+    return this.usersRepository.findOneBy({ username });
   }
 
   async register(username: string, password: string): Promise<User> {
