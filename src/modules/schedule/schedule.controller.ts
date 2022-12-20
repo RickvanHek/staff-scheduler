@@ -4,9 +4,11 @@ import {
   Param,
   Query,
   Request,
+  UnprocessableEntityException,
   UseGuards,
 } from '@nestjs/common';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { intervalToDuration } from 'date-fns';
 import { JwtAuthGuard } from './../auth/guards/jwt-auth.guard';
 import { ListSchedulesQueryParamsDto } from './dtos/list-schedules.dto';
 import { ScheduleService } from './schedule.service';
@@ -20,6 +22,13 @@ export class ScheduleController {
 
   @Get()
   listSchedules(@Request() req, @Query() query: ListSchedulesQueryParamsDto) {
+    if (
+      query.to &&
+      query.from &&
+      intervalToDuration({ start: query.from, end: query.to }).years >= 1
+    ) {
+      throw new UnprocessableEntityException(`Maximum time frame is 1 year`);
+    }
     return this.scheduleService.listSchedules({
       userId: req.user.userId,
       ...query,

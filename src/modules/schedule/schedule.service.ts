@@ -1,12 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import {
-  Between,
-  FindOptionsWhere,
-  LessThanOrEqual,
-  MoreThanOrEqual,
-  Repository,
-} from 'typeorm';
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { addYears, subYears } from 'date-fns';
+import { Between, FindOptionsWhere, Repository } from 'typeorm';
 import { UserService } from '../user/user.service';
 import { Schedule } from './entities/schedule.entity';
 import { IListSchedules } from './interfaces/list-schedules.interface';
@@ -31,9 +30,12 @@ export class ScheduleService {
     if (from && to) {
       query.date = Between(from, to);
     } else if (from) {
-      query.date = MoreThanOrEqual(from);
+      query.date = Between(from, addYears(from, 1));
     } else if (to) {
-      query.date = LessThanOrEqual(from);
+      query.date = Between(subYears(to, 1), to);
+    } else {
+      const now = new Date();
+      query.date = Between(now, addYears(now, 1));
     }
     return query;
   }
@@ -59,6 +61,11 @@ export class ScheduleService {
     const user = await this.userService.findOneById(userId);
     if (!user) {
       throw new NotFoundException(`User with user id: ${userId} not found`);
+    }
+    if (date < new Date()) {
+      throw new UnprocessableEntityException(
+        `Schedule should be in the future`,
+      );
     }
     const schedule = new Schedule(user, date, shiftLength);
     return this.scheduleRespository.save(schedule);
