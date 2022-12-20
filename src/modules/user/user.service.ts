@@ -18,6 +18,10 @@ export class UserService {
     return this.usersRepository.findOneBy({ username });
   }
 
+  findOneById(userId: number): Promise<User> {
+    return this.usersRepository.findOneBy({ id: userId });
+  }
+
   async register(username: string, password: string): Promise<User> {
     const existingUser = await this.usersRepository.findOneBy({ username });
     if (existingUser) {

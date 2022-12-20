@@ -5,10 +5,13 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { User } from './modules/user/entities/user.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ScheduleModule } from './modules/schedule/schedule.module';
+import { Schedule } from './modules/schedule/entities/schedule.entity';
 
 @Module({
   imports: [
     UserModule,
+    ScheduleModule,
     AuthModule,
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
@@ -20,7 +23,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         username: configService.get('MYSQL_USER'),
         password: configService.get('MYSQL_USER_PASS'),
         database: configService.get('MYSQL_DB_NAME'),
-        entities: [User],
+        entities: [User, Schedule],
         synchronize: true,
       }),
       inject: [ConfigService],

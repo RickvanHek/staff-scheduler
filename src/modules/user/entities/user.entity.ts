@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Schedule } from 'src/modules/schedule/entities/schedule.entity';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 
 @Entity()
 export class User {
@@ -16,6 +17,9 @@ export class User {
 
   @Column({ default: false })
   isAdmin: boolean;
+
+  @OneToMany(() => Schedule, (schedule) => schedule.user)
+  schedules: Schedule[];
 
   constructor(username: string, password: string) {
     this.username = username;
