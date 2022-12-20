@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -43,5 +44,10 @@ export class ScheduleAdminController {
   ) {
     const { date, shiftLength } = body;
     return this.scheduleService.editSchedule(scheduleId, date, shiftLength);
+  }
+
+  @Delete(':id')
+  deleteSchedule(@Param('id') scheduleId: number) {
+    return this.scheduleService.deleteSchedule(scheduleId);
   }
 }

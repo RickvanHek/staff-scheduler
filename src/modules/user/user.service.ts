@@ -1,7 +1,12 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
+import { IEditUser } from './interfaces/edit-user-admin.interface';
 
 @Injectable()
 export class UserService {
@@ -29,6 +34,32 @@ export class UserService {
     }
     // TODO: hash
     const user = new User(username, password);
+    return this.usersRepository.save(user);
+  }
+
+  async delete(userId: number) {
+    const user = await this.usersRepository.findOneBy({ id: userId });
+    if (!user) {
+      throw new NotFoundException(`User with id: ${userId} not found`);
+    }
+    this.usersRepository.remove(user);
+  }
+
+  async edit(userId: number, params: IEditUser) {
+    const user = await this.usersRepository.findOneBy({ id: userId });
+    if (!user) {
+      throw new NotFoundException(`User with id: ${userId} not found`);
+    }
+    const { username, isActive, isAdmin } = params;
+    if (username) {
+      user.username = username;
+    }
+    if (isActive !== undefined) {
+      user.isActive = isActive;
+    }
+    if (isAdmin !== undefined) {
+      user.isAdmin = isAdmin;
+    }
     return this.usersRepository.save(user);
   }
 }

@@ -15,7 +15,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post('register')
-  registerUser(@Request() req, @Body() body: RegisterUserBodyDto) {
+  registerUser(@Body() body: RegisterUserBodyDto) {
     const { username, password } = body;
     return this.userService.register(username, password);
   }

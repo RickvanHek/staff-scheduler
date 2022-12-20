@@ -79,4 +79,14 @@ export class ScheduleService {
     }
     return this.scheduleRespository.save(schedule);
   }
+
+  async deleteSchedule(scheduleId: number) {
+    const schedule = await this.scheduleRespository.findOneBy({
+      id: scheduleId,
+    });
+    if (!schedule) {
+      throw new NotFoundException(`Schedule with id: ${scheduleId} not found`);
+    }
+    this.scheduleRespository.remove(schedule);
+  }
 }

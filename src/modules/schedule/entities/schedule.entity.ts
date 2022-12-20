@@ -12,7 +12,7 @@ export class Schedule {
   @Column()
   shiftLength: number;
 
-  @ManyToOne(() => User, (user) => user.schedules)
+  @ManyToOne(() => User, (user) => user.schedules, { onDelete: 'CASCADE' })
   user: User;
 
   constructor(user: User, date: Date, shiftLength: number) {
