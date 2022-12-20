@@ -4,14 +4,14 @@ services:
   admin:
     image: phpmyadmin/phpmyadmin:latest
     links:
-      - mysql:${MYSQL_HOST}
+      - mysql:mysql
     depends_on:
       - mysql
     ports:
       - '8080:80'
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      PMA_HOST: ${MYSQL_HOST}
+      PMA_HOST: mysql
       PMA_PORT: ${MYSQL_PORT}
 
   mysql:

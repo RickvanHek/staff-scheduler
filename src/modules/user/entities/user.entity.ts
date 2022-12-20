@@ -6,11 +6,19 @@ export class User {
   id: number;
 
   @Column()
-  firstName: string;
+  username: string;
 
   @Column()
-  lastName: string;
+  password: string;
 
   @Column({ default: true })
   isActive: boolean;
+
+  @Column({ default: false })
+  isAdmin: boolean;
+
+  constructor(username: string, password: string) {
+    this.username = username;
+    this.password = password;
+  }
 }
