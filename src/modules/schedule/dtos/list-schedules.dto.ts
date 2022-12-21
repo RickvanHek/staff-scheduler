@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsDate, IsOptional } from 'class-validator';
+import { IsDate, IsNumber, IsOptional } from 'class-validator';
 import { UserResponseDto } from 'src/modules/user/dtos/user.dto';
 import { Schedule } from '../entities/schedule.entity';
 export class ListSchedulesQueryParamsDto {
@@ -15,6 +15,12 @@ export class ListSchedulesQueryParamsDto {
   @IsDate()
   @Type(() => Date)
   to?: Date;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  coworkerUserId: number;
 }
 
 export class ScheduleResponseDto {

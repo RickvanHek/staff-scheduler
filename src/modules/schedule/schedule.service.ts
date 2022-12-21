@@ -5,7 +5,6 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { addYears, subYears } from 'date-fns';
-import { getFromToDate } from 'src/common/utils/date.helper';
 import { Between, FindOptionsWhere, Repository } from 'typeorm';
 import { UserService } from '../user/user.service';
 import { Schedule } from './entities/schedule.entity';
@@ -20,12 +19,14 @@ export class ScheduleService {
   ) {}
 
   private getQuery(params: IListSchedules) {
-    const { scheduleId, userId, from, to } = params;
+    const { scheduleId, userId, from, to, coworkerUserId } = params;
     const query: FindOptionsWhere<Schedule> = {};
     if (scheduleId) {
       query.id = scheduleId;
     }
-    if (userId) {
+    if (coworkerUserId !== undefined) {
+      query.user = { id: coworkerUserId };
+    } else if (userId) {
       query.user = { id: userId };
     }
     if (from && to) {

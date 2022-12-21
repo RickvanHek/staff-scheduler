@@ -1,7 +1,5 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { UserAdminResponseDto } from '../../user/dtos/user-admin.dto';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
-import { IsDate, IsOptional } from 'class-validator';
 import { Schedule } from '../entities/schedule.entity';
 
 export class ScheduleAdminResponseDto {
