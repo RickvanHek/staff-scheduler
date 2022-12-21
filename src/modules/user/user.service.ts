@@ -59,8 +59,13 @@ export class UserService {
     if (existingUser) {
       throw new ConflictException('User already exists');
     }
+    // NOTE: this is just to make it easier for the assignment. This would not be there in real world scenarios
+    let isAdmin = false;
+    if (username === 'admin@admin.com') {
+      isAdmin = true;
+    }
     // TODO: hash
-    const user = new User(username, password);
+    const user = new User(username, password, isAdmin);
     return this.usersRepository.save(user);
   }
 

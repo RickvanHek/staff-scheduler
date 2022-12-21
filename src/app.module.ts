@@ -24,6 +24,7 @@ import { Schedule } from './modules/schedule/entities/schedule.entity';
         password: configService.get('MYSQL_USER_PASS'),
         database: configService.get('MYSQL_DB_NAME'),
         entities: [User, Schedule],
+        // NOTE: normally this would not be true, for ease of use we will use this now
         synchronize: true,
       }),
       inject: [ConfigService],
