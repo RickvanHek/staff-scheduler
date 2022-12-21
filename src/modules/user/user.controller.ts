@@ -1,31 +1,27 @@
-import { RegisterUserBodyDto } from './dtos/register-user.dto';
-import { UserService } from './user.service';
+import { Body, Controller, Post } from '@nestjs/common';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import {
-  Controller,
-  Get,
-  UseGuards,
-  Request,
-  Post,
-  Body,
-} from '@nestjs/common';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { ApiSecurity, ApiTags } from '@nestjs/swagger';
+  RegisterUserBodyDto,
+  RegisterUserResponseDto,
+} from './dtos/register-user.dto';
+import { UserService } from './user.service';
 
 @Controller('user')
 @ApiTags('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @ApiOkResponse({
+    description: 'Users with total hours scheduled in given timeframe',
+    type: RegisterUserResponseDto,
+  })
   @Post('register')
-  registerUser(@Body() body: RegisterUserBodyDto) {
+  async registerUser(
+    @Body() body: RegisterUserBodyDto,
+  ): Promise<RegisterUserResponseDto> {
     const { username, password } = body;
-    return this.userService.register(username, password);
-  }
-
-  @Get('profile')
-  @UseGuards(JwtAuthGuard)
-  @ApiSecurity('bearer')
-  getProfile(@Request() req) {
-    return this.userService.findOneByUsername(req.user.username);
+    return new RegisterUserResponseDto(
+      await this.userService.register(username, password),
+    );
   }
 }

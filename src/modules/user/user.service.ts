@@ -4,9 +4,12 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { addYears, subYears } from 'date-fns';
+import { getFromToDate } from 'src/common/utils/date.helper';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { IEditUser } from './interfaces/edit-user-admin.interface';
+import { IGetUsersWithTotals } from './interfaces/get-users-with-totals.interface';
 
 @Injectable()
 export class UserService {
@@ -15,22 +18,33 @@ export class UserService {
     private usersRepository: Repository<User>,
   ) {}
 
-  async findAll(): Promise<{ user: User; totalHours: number }[]> {
+  async getUsersWithTotals(
+    fromDate?: Date,
+    toDate?: Date,
+    sort?: 'ASC' | 'DESC',
+  ): Promise<IGetUsersWithTotals> {
     const queryBuilder = this.usersRepository.createQueryBuilder('user');
+
+    const { from, to } = getFromToDate(fromDate, toDate);
+
     queryBuilder
-      .innerJoin('user.schedules', 'schedules')
-      .addSelect('SUM(schedules.hours)', 'totalHours')
+      .leftJoin('user.schedules', 'schedules')
+      .addSelect(
+        `SUM(CASE WHEN schedules.date BETWEEN '${from.toISOString()}' AND '${to.toISOString()}' THEN schedules.hours ELSE 0 END)`,
+        'totalHours',
+      )
       .groupBy('user.id')
-      .orderBy('totalHours', 'DESC');
+      .orderBy('totalHours', sort || 'DESC');
     const rawUsersWithTotalHours = await queryBuilder.getRawMany();
-    const users = await queryBuilder.getMany();
-    return users.map((user) => ({
+    const userEntities = await queryBuilder.getMany();
+    const usersWithTotals = userEntities.map((user) => ({
       user: user,
       totalHours: parseInt(
         rawUsersWithTotalHours.find((rawUser) => rawUser.user_id === user.id)
           .totalHours,
       ),
     }));
+    return { from, to, usersWithTotals };
   }
 
   findOneByUsername(username: string): Promise<User> {

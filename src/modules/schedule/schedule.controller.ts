@@ -7,10 +7,15 @@ import {
   UnprocessableEntityException,
   UseGuards,
 } from '@nestjs/common';
-import { ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { intervalToDuration } from 'date-fns';
+import { getFromToDate } from 'src/common/utils/date.helper';
 import { JwtAuthGuard } from './../auth/guards/jwt-auth.guard';
-import { ListSchedulesQueryParamsDto } from './dtos/list-schedules.dto';
+import {
+  ListSchedulesQueryParamsDto,
+  ListSchedulesResponseDto,
+  ScheduleResponseDto,
+} from './dtos/list-schedules.dto';
 import { ScheduleService } from './schedule.service';
 
 @UseGuards(JwtAuthGuard)
@@ -20,8 +25,15 @@ import { ScheduleService } from './schedule.service';
 export class ScheduleController {
   constructor(private readonly scheduleService: ScheduleService) {}
 
+  @ApiOkResponse({
+    description: 'Schedules',
+    type: ListSchedulesResponseDto,
+  })
   @Get()
-  listSchedules(@Request() req, @Query() query: ListSchedulesQueryParamsDto) {
+  async listSchedules(
+    @Request() req,
+    @Query() query: ListSchedulesQueryParamsDto,
+  ): Promise<ListSchedulesResponseDto> {
     if (
       query.to &&
       query.from &&
@@ -29,17 +41,31 @@ export class ScheduleController {
     ) {
       throw new UnprocessableEntityException(`Maximum time frame is 1 year`);
     }
-    return this.scheduleService.listSchedules({
-      userId: req.user.userId,
-      ...query,
-    });
+    const { from, to } = getFromToDate(query.from, query.to);
+    return new ListSchedulesResponseDto(
+      from,
+      to,
+      await this.scheduleService.listSchedules({
+        userId: req.user.userId,
+        ...query,
+      }),
+    );
   }
 
+  @ApiOkResponse({
+    description: 'Schedule',
+    type: ScheduleResponseDto,
+  })
   @Get(':id')
-  getSchedule(@Request() req, @Param('id') scheduleId: number) {
-    return this.scheduleService.getSchedule({
-      scheduleId,
-      userId: req.user.userId,
-    });
+  async getSchedule(
+    @Request() req,
+    @Param('id') scheduleId: number,
+  ): Promise<ScheduleResponseDto> {
+    return new ScheduleResponseDto(
+      await this.scheduleService.getSchedule({
+        scheduleId,
+        userId: req.user.userId,
+      }),
+    );
   }
 }

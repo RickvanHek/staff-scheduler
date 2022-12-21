@@ -9,3 +9,8 @@ export class LoginBodyDto {
   @ApiProperty()
   password: string;
 }
+
+export class LoginResponseDto {
+  @ApiProperty()
+  access_token: string;
+}

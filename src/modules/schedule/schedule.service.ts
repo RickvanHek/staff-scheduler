@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { addYears, subYears } from 'date-fns';
+import { getFromToDate } from 'src/common/utils/date.helper';
 import { Between, FindOptionsWhere, Repository } from 'typeorm';
 import { UserService } from '../user/user.service';
 import { Schedule } from './entities/schedule.entity';
@@ -40,9 +41,9 @@ export class ScheduleService {
     return query;
   }
 
-  async listSchedules(params: IListSchedules) {
+  async listSchedules(params: IListSchedules, relations?: string[]) {
     const query = this.getQuery(params);
-    return this.scheduleRespository.find({ where: query, relations: ['user'] });
+    return this.scheduleRespository.find({ where: query, relations });
   }
 
   async getSchedule(params: IListSchedules) {
