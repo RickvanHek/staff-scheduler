@@ -9,7 +9,7 @@ export class UserResponseDto {
   username: string;
 
   constructor(user: User) {
-    const { id, isActive, isAdmin, username } = user;
+    const { id, username } = user;
     this.id = id;
     this.username = username;
   }
