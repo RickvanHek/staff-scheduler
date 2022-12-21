@@ -1,23 +1,10 @@
+import { UserAdminResponseDto } from '../../user/dtos/user-admin.dto';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsDate, IsOptional } from 'class-validator';
-import { UserResponseDto } from 'src/modules/user/dtos/user.dto';
 import { Schedule } from '../entities/schedule.entity';
-export class ListSchedulesQueryParamsDto {
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsDate()
-  @Type(() => Date)
-  from?: Date;
 
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsDate()
-  @Type(() => Date)
-  to?: Date;
-}
-
-export class ScheduleResponseDto {
+export class ScheduleAdminResponseDto {
   @ApiProperty()
   date: Date;
 
@@ -27,30 +14,32 @@ export class ScheduleResponseDto {
   @ApiProperty()
   id: number;
 
-  @ApiPropertyOptional()
-  user?: UserResponseDto;
+  @ApiProperty()
+  user: UserAdminResponseDto;
 
   constructor(schedule: Schedule) {
     const { date, hours, id, user } = schedule;
     this.date = date;
     this.hours = hours;
     this.id = id;
-    this.user = user && new UserResponseDto(user);
+    this.user = user && new UserAdminResponseDto(user);
   }
 }
-export class ListSchedulesResponseDto {
+export class ListSchedulesAdminResponseDto {
   @ApiProperty()
   from: Date;
 
   @ApiProperty()
   to: Date;
 
-  @ApiProperty({ isArray: true, type: ScheduleResponseDto })
-  data: ScheduleResponseDto[];
+  @ApiProperty({ isArray: true, type: ScheduleAdminResponseDto })
+  data: ScheduleAdminResponseDto[];
 
   constructor(from: Date, to: Date, schedules: Schedule[]) {
     this.from = from;
     this.to = to;
-    this.data = schedules.map((schedule) => new ScheduleResponseDto(schedule));
+    this.data = schedules.map(
+      (schedule) => new ScheduleAdminResponseDto(schedule),
+    );
   }
 }

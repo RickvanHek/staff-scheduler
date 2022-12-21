@@ -5,6 +5,7 @@ import {
   IGetUsersWithTotals,
   IUserWithTotalHours,
 } from '../interfaces/get-users-with-totals.interface';
+import { UserAdminResponseDto } from './user-admin.dto';
 
 export class ListUsersAccumulatedAdminQueryParamsDto {
   @ApiPropertyOptional()
@@ -25,29 +26,13 @@ export class ListUsersAccumulatedAdminQueryParamsDto {
   sort?: 'ASC' | 'DESC';
 }
 
-export class UserWithTotalHoursDto {
-  @ApiProperty()
-  username: string;
-
-  @ApiProperty()
-  id: number;
-
-  @ApiProperty()
-  isActive: boolean;
-
-  @ApiProperty()
-  isAdmin: boolean;
-
+export class UserWithTotalHoursDto extends UserAdminResponseDto {
   @ApiProperty()
   hours: number;
 
   constructor(userWithTotal: IUserWithTotalHours) {
     const { user, totalHours } = userWithTotal;
-    const { username, id, isActive, isAdmin } = user;
-    this.username = username;
-    this.id = id;
-    this.isActive = isActive;
-    this.isAdmin = isAdmin;
+    super(user);
     this.hours = totalHours;
   }
 }

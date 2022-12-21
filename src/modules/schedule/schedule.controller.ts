@@ -61,6 +61,9 @@ export class ScheduleController {
     @Request() req,
     @Param('id') scheduleId: number,
   ): Promise<ScheduleResponseDto> {
+    if (Number.isNaN(scheduleId)) {
+      throw new UnprocessableEntityException(`Invalid schedule id`);
+    }
     return new ScheduleResponseDto(
       await this.scheduleService.getSchedule({
         scheduleId,

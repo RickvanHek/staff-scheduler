@@ -1,13 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from 'src/modules/user/entities/user.entity';
+import { UserResponseDto } from './user.dto';
 
-export class UserResponseDto {
-  @ApiProperty()
-  id: number;
-
-  @ApiProperty()
-  username: string;
-
+export class UserAdminResponseDto extends UserResponseDto {
   @ApiProperty()
   isActive: boolean;
 
@@ -15,9 +10,8 @@ export class UserResponseDto {
   isAdmin: boolean;
 
   constructor(user: User) {
-    const { id, isActive, isAdmin, username } = user;
-    this.id = id;
-    this.username = username;
+    const { isActive, isAdmin } = user;
+    super(user);
     this.isActive = isActive;
     this.isAdmin = isAdmin;
   }

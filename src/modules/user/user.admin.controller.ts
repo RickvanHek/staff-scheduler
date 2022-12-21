@@ -14,7 +14,7 @@ import { intervalToDuration } from 'date-fns';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AdminGuard } from './../auth/guards/admin.guard';
 import { EditUserAdminBodyDto } from './dtos/edit-user-admin.dto';
-import { UserResponseDto } from './dtos/user-admin.dto';
+import { UserAdminResponseDto } from './dtos/user-admin.dto';
 import {
   ListUsersAccumulatedAdminQueryParamsDto,
   ListUsersAccumulatedResponseDto,
@@ -47,11 +47,11 @@ export class UserAdminController {
 
   @ApiOkResponse({
     description: 'The user',
-    type: UserResponseDto,
+    type: UserAdminResponseDto,
   })
   @Get(':id')
-  async getUser(@Param('id') userId: number): Promise<UserResponseDto> {
-    return new UserResponseDto(await this.userService.findOneById(userId));
+  async getUser(@Param('id') userId: number): Promise<UserAdminResponseDto> {
+    return new UserAdminResponseDto(await this.userService.findOneById(userId));
   }
 
   @Delete(':id')
@@ -61,13 +61,13 @@ export class UserAdminController {
 
   @ApiOkResponse({
     description: 'The edited user',
-    type: UserResponseDto,
+    type: UserAdminResponseDto,
   })
   @Patch(':id')
   async editUser(
     @Param('id') userId: number,
     @Body() body: EditUserAdminBodyDto,
-  ): Promise<UserResponseDto> {
-    return new UserResponseDto(await this.userService.edit(userId, body));
+  ): Promise<UserAdminResponseDto> {
+    return new UserAdminResponseDto(await this.userService.edit(userId, body));
   }
 }

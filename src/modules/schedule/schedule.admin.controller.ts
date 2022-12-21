@@ -1,4 +1,3 @@
-import { ApiOkResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -10,17 +9,18 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { ApiOkResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { getFromToDate } from 'src/common/utils/date.helper';
 import { AdminGuard } from '../auth/guards/admin.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CreateScheduleAdminBodyDto } from './dtos/create-schedule-admin.dto';
 import { EditScheduleAdminBodyDto } from './dtos/edit-schedule-admin.dto';
 import {
-  ListSchedulesQueryParamsDto,
-  ListSchedulesResponseDto,
-  ScheduleResponseDto,
-} from './dtos/list-schedules.dto';
+  ListSchedulesAdminResponseDto,
+  ScheduleAdminResponseDto,
+} from './dtos/list-schedules-admin.dto';
+import { ListSchedulesQueryParamsDto } from './dtos/list-schedules.dto';
 import { ScheduleService } from './schedule.service';
-import { getFromToDate } from 'src/common/utils/date.helper';
 
 @UseGuards(JwtAuthGuard, AdminGuard)
 @Controller('admin/schedule')
@@ -31,14 +31,14 @@ export class ScheduleAdminController {
 
   @ApiOkResponse({
     description: 'Schedules',
-    type: ListSchedulesResponseDto,
+    type: ListSchedulesAdminResponseDto,
   })
   @Get()
   async getSchedules(
     @Query() query: ListSchedulesQueryParamsDto,
-  ): Promise<ListSchedulesResponseDto> {
+  ): Promise<ListSchedulesAdminResponseDto> {
     const { from, to } = getFromToDate(query.from, query.to);
-    return new ListSchedulesResponseDto(
+    return new ListSchedulesAdminResponseDto(
       from,
       to,
       await this.scheduleService.listSchedules({ from, to, ...query }, [
@@ -49,42 +49,42 @@ export class ScheduleAdminController {
 
   @ApiOkResponse({
     description: 'Schedule',
-    type: ScheduleResponseDto,
+    type: ScheduleAdminResponseDto,
   })
   @Get(':id')
   async getSchedule(
     @Param('id') scheduleId: number,
-  ): Promise<ScheduleResponseDto> {
-    return new ScheduleResponseDto(
+  ): Promise<ScheduleAdminResponseDto> {
+    return new ScheduleAdminResponseDto(
       await this.scheduleService.getSchedule({ scheduleId }),
     );
   }
 
   @ApiOkResponse({
     description: 'New schedule',
-    type: ScheduleResponseDto,
+    type: ScheduleAdminResponseDto,
   })
   @Post()
   async createSchedule(
     @Body() body: CreateScheduleAdminBodyDto,
-  ): Promise<ScheduleResponseDto> {
+  ): Promise<ScheduleAdminResponseDto> {
     const { userId, date, hours } = body;
-    return new ScheduleResponseDto(
+    return new ScheduleAdminResponseDto(
       await this.scheduleService.createSchedule(userId, date, hours),
     );
   }
 
   @ApiOkResponse({
     description: 'New schedule',
-    type: ScheduleResponseDto,
+    type: ScheduleAdminResponseDto,
   })
   @Patch(':id')
   async editSchedule(
     @Param('id') scheduleId: number,
     @Body() body: EditScheduleAdminBodyDto,
-  ): Promise<ScheduleResponseDto> {
+  ): Promise<ScheduleAdminResponseDto> {
     const { date, hours } = body;
-    return new ScheduleResponseDto(
+    return new ScheduleAdminResponseDto(
       await this.scheduleService.editSchedule(scheduleId, date, hours),
     );
   }

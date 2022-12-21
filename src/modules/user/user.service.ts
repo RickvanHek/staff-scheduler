@@ -4,9 +4,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { addYears, subYears } from 'date-fns';
 import { getFromToDate } from 'src/common/utils/date.helper';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { IEditUser } from './interfaces/edit-user-admin.interface';
 import { IGetUsersWithTotals } from './interfaces/get-users-with-totals.interface';
@@ -89,5 +88,9 @@ export class UserService {
       user.isAdmin = isAdmin;
     }
     return this.usersRepository.save(user);
+  }
+
+  async listCoworkers(userId: number): Promise<User[]> {
+    return this.usersRepository.find({ where: { id: Not(userId) } });
   }
 }
