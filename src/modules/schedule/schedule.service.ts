@@ -64,7 +64,9 @@ export class ScheduleService {
     if (!user) {
       throw new NotFoundException(`User with user id: ${userId} not found`);
     }
-    if (date < new Date()) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (date < today) {
       throw new UnprocessableEntityException(
         `Schedule should be in the future`,
       );
@@ -96,6 +98,6 @@ export class ScheduleService {
     if (!schedule) {
       throw new NotFoundException(`Schedule with id: ${scheduleId} not found`);
     }
-    this.scheduleRespository.remove(schedule);
+    return this.scheduleRespository.remove(schedule);
   }
 }

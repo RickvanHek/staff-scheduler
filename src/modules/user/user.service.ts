@@ -74,7 +74,7 @@ export class UserService {
     if (!user) {
       throw new NotFoundException(`User with id: ${userId} not found`);
     }
-    this.usersRepository.remove(user);
+    return this.usersRepository.remove(user);
   }
 
   async edit(userId: number, params: IEditUser) {
