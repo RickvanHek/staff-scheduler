@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiOkResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { getFromToDate } from 'src/common/utils/date.helper';
+import { getFromToDate } from '../../common/utils/date.helper';
 import { AdminGuard } from '../auth/guards/admin.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CreateScheduleAdminBodyDto } from './dtos/create-schedule-admin.dto';

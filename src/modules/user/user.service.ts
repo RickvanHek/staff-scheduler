@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { getFromToDate } from 'src/common/utils/date.helper';
+import { getFromToDate } from '../../common/utils/date.helper';
 import { Not, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { IEditUser } from './interfaces/edit-user-admin.interface';

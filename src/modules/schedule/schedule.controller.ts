@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { ApiOkResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { intervalToDuration } from 'date-fns';
-import { getFromToDate } from 'src/common/utils/date.helper';
+import { getFromToDate } from '../../common/utils/date.helper';
 import { JwtAuthGuard } from './../auth/guards/jwt-auth.guard';
 import {
   ListSchedulesQueryParamsDto,
