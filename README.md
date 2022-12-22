@@ -13,8 +13,15 @@ To run MySQL + the server through docker, run the below command:
 ```bash
 $ docker compose up
 ```
+## Bypassing the admin authentication
+For testing purpose, if you register a user by using the provided endpoint `POST /user/register` with the email: `admin@admin.com` you will be automatically marked as an admin user. Note that this is only for demonstration purposes, in real scenarios this would not be used.
 
-## Running the app
+## Running the app locally
+Install the dependencies by executing
+
+```bash
+$ yarn install
+```
 
 If you have MySQL running and the environment file `.env` has been correctly set up with the correct MySQL variables, you can run the server with the following commands
 
@@ -28,13 +35,11 @@ $ yarn start:dev
 
 ## Test
 
+Before running tests, make sure the packages are installed using
 ```bash
-# unit tests
+$ yarn install
+```
+After this, to run the tests, execute:
+```bash
 $ yarn test
-
-# e2e tests
-$ yarn test:e2e
-
-# test coverage
-$ yarn test:cov
 ```
