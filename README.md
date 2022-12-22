@@ -14,6 +14,8 @@ To run MySQL + the server through docker, run the below command:
 $ docker compose up
 ```
 
+Note: the .env file is required to run through Docker.
+
 ## Bypassing the admin authentication
 
 For testing purpose, if you register a user by using the provided endpoint `POST /user/register` with the email: `admin@admin.com` you will be automatically marked as an admin user. Note that this is only for demonstration purposes, in real scenarios this would not be used.
